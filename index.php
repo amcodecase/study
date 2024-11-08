@@ -152,8 +152,8 @@
 
 <div class="top-right">
   <span class="theme-toggle" onclick="toggleTheme()">🌞</span>
-  <a href="#">Help</a>
-  <a href="#">FAQs</a>
+  <a href="help">Help</a>
+  <a href="faqs">FAQs</a>
 </div>
 
 <div class="login-container">
