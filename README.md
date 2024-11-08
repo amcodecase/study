@@ -1,7 +1,7 @@
 # study
 An educational platform by Naval Technology Center (NATEC) that offers tech courses, interactive sessions, and resources for students and professionals. Focused on collaborative learning, it provides master classes, workshops, and personalized tutoring, both online and offline, to help learners build essential tech skills.
 
-#Features
+# Features
 Interactive Courses: Structured courses covering essential tech skills, designed for both beginners and advanced learners.
 Collaborative Learning: Engage in group discussions, team projects, and workshops for a more immersive learning experience.
 Live Master Classes: Attend live sessions with industry experts and educators to dive deeper into specialized topics.
