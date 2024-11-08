@@ -17,6 +17,7 @@
       font-family: Arial, sans-serif;
       margin: 0;
       background-color: #ffffff;
+      /* opacity: .8; */
     }
     .register-container {
       width: 100%;
@@ -47,7 +48,7 @@
     .form-group input[type="tel"] {
       width: 100%;
       padding: 10px;
-      border: 1px solid #333;
+      border: 1px solid #ddd;
       border-radius: 4px;
       font-size: 16px;
       outline: none;

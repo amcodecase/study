@@ -128,6 +128,39 @@
     .remember-me input {
       margin-right: 5px;
     }
+
+    .social-login {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.google-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #444;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.google-login-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.google-login-btn img {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
+
+
     .links {
       margin-top: 15px;
       font-size: 14px;
@@ -145,6 +178,7 @@
       font-size: 14px;
       color: #777;
     }
+    
   </style>
 </head>
 
@@ -175,11 +209,21 @@
       <label for="rememberMe">Remember Me</label>
     </div>
     <button type="submit" class="login-btn" disabled>Login</button>
+    <p class="alt">or</p>
+    <!-- Google login button -->
+    <div class="social-login">
+      <button type="button" class="google-login-btn" onclick="googleLogin()">
+        <img src="assets/img/google.svg" alt="Google Logo">
+        Sign in with Google
+      </button>
+    </div>
+    
     <div class="links">
       <a href="#">Forgot Password?</a> | <a href="register">Register</a>
     </div>
   </form>
 </div>
+
 
 <div class="footer">
   &copy; <span id="currentYear"></span> NATEC - Version 1.0
@@ -204,6 +248,7 @@
   }
   loadTheme();
 
+  // Toggle Password Visibility
   function togglePasswordVisibility() {
     const passwordField = document.getElementById('password');
     const eyeIcon = document.querySelector('.view-password i');
@@ -216,14 +261,15 @@
     }
   }
 
+  // Enable login button when inputs are filled
   function toggleLoginButton() {
     loginBtn.disabled = !username.value || !password.value;
   }
 
+  // Update network logo based on phone number
   function updateNetworkLogo() {
     const phoneNumber = username.value.trim();
 
-    // Check if the phone number is 10 digits and starts with 0
     if (phoneNumber.length === 10 && phoneNumber[0] === '0') {
       const prefix = phoneNumber.substring(0, 3);
       if (['077', '097'].includes(prefix)) {
@@ -243,6 +289,7 @@
     }
   }
 
+  // Toggle Theme Function
   function toggleTheme() {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -252,9 +299,13 @@
     logoImage.src = newTheme === 'dark' ? 'assets/img/main_bw.png' : 'assets/img/landscape.svg';
   }
 
-  username.addEventListener('input', toggleLoginButton);
+  // Event Listeners
+  username.addEventListener('input', () => {
+    toggleLoginButton();
+    updateNetworkLogo();
+  });
   password.addEventListener('input', toggleLoginButton);
-  username.addEventListener('input', updateNetworkLogo);
+  document.getElementById('loginForm').addEventListener('submit', (e) => e.preventDefault());
 </script>
 
 </body>

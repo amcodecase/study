@@ -67,10 +67,12 @@
     .faq-container {
       width: 100%;
       max-width: 800px;
-      margin: 30px auto;
+      margin: auto;
       padding: 20px;
       background-color: #fff;
       border-radius: 10px;
+      padding-left: 20px;
+      padding-right: 20px;
     }
 
     .faq-item {
