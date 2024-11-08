@@ -176,7 +176,7 @@
 
 <header>
   <button class="back-button" onclick="goBack()"><i class="fas fa-arrow-left"></i> Back</button>
-  <h1 class="header-title">Frequently Asked Questions - NATEC</h1>
+  <h1 class="header-title">FAQs - NATEC</h1>
 </header>
 
 <div class="faq-container">
