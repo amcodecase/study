@@ -7,11 +7,17 @@
   <link rel="icon" href="assets/img/landscape.svg" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      /* background-color: #f5f5f5; */
       color: #333;
       box-sizing: border-box;
       overflow: hidden;
@@ -64,7 +70,6 @@
       margin: 30px auto;
       padding: 20px;
       background-color: #fff;
-      /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
       border-radius: 10px;
     }
 
@@ -73,7 +78,6 @@
       margin-bottom: 15px;
       padding: 20px;
       border-radius: 8px;
-      /* border: 1px solid #ddd; */
       transition: background-color 0.3s ease;
       width: 100%;
     }
@@ -114,7 +118,6 @@
       text-align: center;
       padding: 20px;
       font-size: 16px;
-      /* background-color: #0077B6; */
       color: #000;
     }
 
