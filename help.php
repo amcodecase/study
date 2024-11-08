@@ -102,6 +102,45 @@
     .footer span {
       font-weight: bold;
     }
+
+    /* Media query for mobile responsiveness */
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 10px;
+      }
+
+      .header-title {
+        font-size: 18px;
+        text-align: center;
+      }
+
+      .back-button {
+        position: static;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+
+      .help-container {
+        margin: 20px;
+        padding: 15px;
+      }
+
+      .help-section h3 {
+        font-size: 16px;
+      }
+
+      .help-section p, .help-section li {
+        font-size: 14px;
+      }
+
+      .footer {
+        font-size: 12px;
+        padding: 10px;
+      }
+    }
   </style>
 </head>
 <body>
