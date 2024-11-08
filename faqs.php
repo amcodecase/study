@@ -11,8 +11,16 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f4f4f9;
+      /* background-color: #f5f5f5; */
       color: #333;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: inherit;
     }
 
     header {
@@ -22,12 +30,17 @@
       align-items: center;
       padding: 15px 20px;
       position: relative;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 100%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .header-title {
       flex-grow: 1;
       text-align: center;
-      font-size: 22px;
+      font-size: 24px;
+      margin: 0;
     }
 
     .back-button {
@@ -38,26 +51,35 @@
       color: #fff;
       font-size: 18px;
       cursor: pointer;
+      transition: transform 0.3s;
     }
 
-    .back-button i {
-      margin-right: 5px;
+    .back-button:hover {
+      transform: scale(1.1);
     }
 
     .faq-container {
-      max-width: 700px;
+      width: 100%;
+      max-width: 800px;
       margin: 30px auto;
       padding: 20px;
-      width: 100%;
+      background-color: #fff;
+      /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+      border-radius: 10px;
     }
 
     .faq-item {
       background-color: #fff;
       margin-bottom: 15px;
-      padding: 15px 20px;
-      border: 1px solid #ddd;
+      padding: 20px;
       border-radius: 8px;
+      /* border: 1px solid #ddd; */
       transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    .faq-item:hover {
+      background-color: #f1f1f1;
     }
 
     .faq-question {
@@ -67,6 +89,7 @@
       justify-content: space-between;
       align-items: center;
       transition: color 0.3s;
+      font-size: 18px;
     }
 
     .faq-question:hover {
@@ -89,15 +112,16 @@
 
     .footer {
       text-align: center;
-      padding: 10px;
-      color: #777;
-      font-size: 14px;
-      position: absolute;
-      width: 100%;
-      bottom: 0;
+      padding: 20px;
+      font-size: 16px;
+      /* background-color: #0077B6; */
+      color: #000;
     }
 
-    /* Responsive design */
+    .footer span {
+      font-weight: bold;
+    }
+
     @media screen and (max-width: 768px) {
       .faq-container {
         padding: 15px;
@@ -105,7 +129,7 @@
       }
 
       .header-title {
-        font-size: 18px;
+        font-size: 20px;
       }
 
       .back-button {
@@ -113,17 +137,25 @@
       }
 
       .faq-item {
-        padding: 10px 15px;
+        padding: 15px;
       }
 
       .faq-question {
         font-size: 16px;
       }
+
+      .faq-answer {
+        padding-top: 8px;
+      }
+
+      .footer {
+        font-size: 14px;
+      }
     }
 
     @media screen and (max-width: 480px) {
       .header-title {
-        font-size: 16px;
+        font-size: 18px;
       }
 
       .back-button {

@@ -103,6 +103,17 @@
       font-weight: bold;
     }
 
+    /* Link styles for email and phone */
+    .help-section a {
+      color: #0077B6;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .help-section a:hover {
+      text-decoration: underline;
+    }
+
     /* Media query for mobile responsiveness */
     @media (max-width: 600px) {
       header {
