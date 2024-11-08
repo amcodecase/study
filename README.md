@@ -9,12 +9,12 @@ Personalized Tutoring: Access one-on-one sessions for tailored support and guida
 Offline Support: Download course materials to continue learning without an internet connection.
 Progress Tracking: Track your progress, set personal goals, and earn badges as you complete each module.
 
-#Contributing
+# Contributing
 Contributions are welcome! Please read our contribution guidelines to get started. We encourage collaboration on new features, bug fixes, and documentation improvements.
 
-#License
+# License
 This project is licensed under the MIT License.
 
-#Contact
+# Contact
 For more information about Naval Technology Center (NATEC) and study.natec.icu, visit our LinkedIn page or reach out at info@natec.icu
 
