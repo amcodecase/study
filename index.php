@@ -160,6 +160,33 @@
   margin-right: 8px;
 }
 
+.google-login-btn[disabled] {
+  cursor: not-allowed;
+  position: relative;
+}
+
+.google-login-btn[disabled]:hover::after,
+.google-login-btn[disabled]:active::after {
+  content: "Coming soon";
+  position: absolute;
+  bottom: 110%; /* Position the tooltip above the button */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.google-login-btn[disabled]::after {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
 
     .links {
       margin-top: 15px;
@@ -212,7 +239,7 @@
     <p class="alt">or</p>
     <!-- Google login button -->
     <div class="social-login">
-      <button type="button" class="google-login-btn" onclick="googleLogin()">
+      <button type="button" class="google-login-btn" onclick="googleLogin()" disabled>
         <img src="assets/img/google.svg" alt="Google Logo">
         Sign in with Google
       </button>
