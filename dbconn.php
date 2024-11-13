@@ -2,7 +2,7 @@
 
 $host = 'localhost';
 $db_name = 'u178619125_study';
-$username = 'mau178619125_studyin';
+$username = 'u178619125_study';
 $password = '@Study01';
 
 // Create a new mysqli connection
