@@ -1,279 +1,160 @@
-<!DOCTYPE html>
+<?php
+// Include the database connection
+include('dbconn.php');
+
+// Enable error reporting for development (disable on production)
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+// Initialize message variable
+$message = '';
+$messageType = '';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Get form inputs
+    $firstName = trim($_POST['firstName']);
+    $lastName = trim($_POST['lastName']);
+    $email = trim($_POST['email']);
+    $phone = trim($_POST['phone']);
+    $nrc = trim($_POST['nrc']);
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirmPassword'];
+
+    // Basic validation
+    if ($password !== $confirmPassword) {
+        $message = 'Passwords do not match!';
+        $messageType = 'error';
+    } else {
+        // Check if the email, phone, or NRC already exists in the database
+        $checkQuery = "SELECT * FROM users WHERE email = ? OR phone = ? OR nrc = ?";
+        if ($stmt = $mysqli->prepare($checkQuery)) {
+            $stmt->bind_param('sss', $email, $phone, $nrc);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                // Duplicate found
+                $message = 'Email, Phone Number, or NRC already exists!';
+                $messageType = 'error';
+            } else {
+                // Create a password hash using MD5
+                $hashedPassword = md5($password);  // Using MD5 (note: insecure for real applications)
+
+                // Insert data into the database
+                $insertQuery = "INSERT INTO users (first_name, last_name, email, phone, nrc, password_hash) 
+                                VALUES (?, ?, ?, ?, ?, ?)";
+                
+                if ($stmt = $mysqli->prepare($insertQuery)) {
+                    $stmt->bind_param('ssssss', $firstName, $lastName, $email, $phone, $nrc, $hashedPassword);
+                    $stmt->execute();
+                    
+                    // Success message
+                    $message = 'Registration successful! You can now log in.';
+                    $messageType = 'success';
+                    
+                    // Redirect to the login page after successful registration (PRG pattern)
+                    header('Location: index.php');
+                    exit();  // Make sure to exit after redirect
+                } else {
+                    $message = 'Error inserting data: ' . $mysqli->error;
+                    $messageType = 'error';
+                }
+            }
+
+            $stmt->close();
+        } else {
+            $message = 'Database error: ' . $mysqli->error;
+            $messageType = 'error';
+        }
+    }
+}
+?><!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register - Portal</title>
   <link rel="icon" href="assets/img/landscape.svg" type="image/png">
+  <link rel="stylesheet" href="assets/css/register.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    /* Existing styles */
-    body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background-color: #ffffff;
-      /* opacity: .8; */
+  <script>
+    let countdown = 3;
+
+    function startCountdown() {
+      const countdownElement = document.getElementById('countdown');
+      const interval = setInterval(() => {
+        countdownElement.innerText = 'Redirecting in ' + countdown + ' seconds...';
+        countdown--;
+
+        if (countdown < 0) {
+          clearInterval(interval);
+          window.location.href = 'index.php'; // Redirect to the login page
+        }
+      }, 1000);
     }
-    .register-container {
-      width: 100%;
-      max-width: 320px;
-      text-align: center;
-      padding: 0;
-    }
-    .register-container img {
-      width: 200px;
-      margin-bottom: 0;
-      line-height: 1;
-    }
-    .register-container h2 {
-      margin-top: 0;
-      margin-bottom: 20px;
-      font-size: 24px;
-      color: #333;
-      font-weight: 600;
-      line-height: 1;
-    }
-    .form-group {
-      position: relative;
-      margin-bottom: 15px;
-    }
-    .form-group input[type="text"],
-    .form-group input[type="email"],
-    .form-group input[type="password"],
-    .form-group input[type="tel"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 16px;
-      outline: none;
-      box-sizing: border-box;
-    }
-    .form-group img {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 24px;
-      height: 24px;
-      user-select: none;
-    }
-    .view-password {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-      font-size: 18px;
-      color: #333;
-      user-select: none;
-    }
-    .register-btn {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 4px;
-      font-size: 16px;
-      background-color: #0077B6;
-      color: #fff;
-      cursor: pointer;
-      transition: background-color 0.3s ease-in-out;
-    }
-    .register-btn:hover {
-      background-color: #0099B8;
-    }
-    .form-links {
-      margin-top: 15px;
-      font-size: 14px;
-    }
-    .form-links a {
-      color: dodgerblue;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-    .form-links a:hover {
-      color: #1e5cb8;
-    }
-    .footer {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #777;
-    }
-    .name-container {
-      display: flex;
-      justify-content: space-between;
-    }
-    .name-container .form-group {
-      width: 48%;
-    }
-    .error-message {
-      color: red;
-      font-size: 12px;
-    }
-  </style>
+
+    window.onload = function() {
+      <?php if ($messageType == 'success'): ?>
+        startCountdown(); // Start countdown if registration was successful
+      <?php endif; ?>
+    };
+  </script>
 </head>
 <body>
-
 <div class="register-container">
   <img src="assets/img/landscape.svg" alt="NATEC Logo">
   <h2>Create Your Account</h2>
-  <form id="registerForm">
+  
+  <?php if ($message): ?>
+    <div class="message <?php echo $messageType; ?>">
+      <?php echo $message; ?>
+    </div>
+    <!-- Countdown message -->
+    <?php if ($messageType == 'success'): ?>
+      <div id="countdown" class="countdown-message"></div>
+    <?php endif; ?>
+  <?php endif; ?>
+  
+  <form id="registerForm" method="POST" action="register.php">
     <div class="name-container">
       <div class="form-group">
-        <input type="text" id="firstName" placeholder="First Name" required>
+        <input type="text" name="firstName" id="firstName" placeholder="First Name" required>
       </div>
       <div class="form-group">
-        <input type="text" id="lastName" placeholder="Last Name" required>
+        <input type="text" name="lastName" id="lastName" placeholder="Last Name" required>
       </div>
     </div>
     <div class="form-group">
-      <input type="email" id="email" placeholder="Email Address" required>
+      <input type="email" name="email" id="email" placeholder="Email Address" required>
       <div id="emailError" class="error-message"></div>
     </div>
     <div class="form-group">
-      <input type="tel" id="phone" placeholder="Phone Number" required>
+      <input type="tel" name="phone" id="phone" placeholder="Phone Number" required>
       <img id="networkLogo" src="" alt="Network Logo" style="display: none;">
     </div>
     <div class="form-group">
-      <input type="tel" id="nrc" placeholder="NRC Number" required maxlength="14">
+      <input type="tel" name="nrc" id="nrc" placeholder="NRC Number" required maxlength="14">
       <div id="nrcError" class="error-message"></div>
     </div>
     <div class="form-group">
-      <input type="password" id="password" placeholder="Create Password" required>
+      <input type="password" name="password" id="password" placeholder="Create Password" required>
       <span class="view-password" onclick="togglePasswordVisibility()">
         <i class="fas fa-eye"></i>
       </span>
     </div>
     <div class="form-group">
-      <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+      <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
       <div id="passwordError" class="error-message"></div>
     </div>
-    <button type="submit" class="register-btn" disabled>Register</button>
+    <button type="submit" class="register-btn">Register</button>
     <div class="form-links">
       <a href="index">Already have an account? Login</a>
     </div>
   </form>
 </div>
-
 <div class="footer">
   &copy; <span id="currentYear"></span> NATEC - Version 1.0
 </div>
-
-<script>
-  const firstName = document.getElementById('firstName');
-  const lastName = document.getElementById('lastName');
-  const email = document.getElementById('email');
-  const phone = document.getElementById('phone');
-  const nrc = document.getElementById('nrc');
-  const password = document.getElementById('password');
-  const confirmPassword = document.getElementById('confirmPassword');
-  const registerBtn = document.querySelector('.register-btn');
-  const networkLogo = document.getElementById('networkLogo');
-  const currentYear = new Date().getFullYear();
-  document.getElementById('currentYear').textContent = currentYear;
-
-  function togglePasswordVisibility() {
-    const passwordField = document.getElementById('password');
-    const eyeIcon = document.querySelector('.view-password i');
-    if (passwordField.type === 'password') {
-      passwordField.type = 'text';
-      eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
-    } else {
-      passwordField.type = 'password';
-      eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
-    }
-  }
-
-  function toggleRegisterButton() {
-    registerBtn.disabled = !firstName.value || !lastName.value || !email.value || !phone.value || !nrc.value || !password.value || !confirmPassword.value || password.value !== confirmPassword.value || !validateEmail() || !validateNRC() || !validatePassword();
-  }
-
-  function updateNetworkLogo() {
-    const phoneNumber = phone.value.trim();
-
-    if (phoneNumber.length === 10 && phoneNumber[0] === '0') {
-      const prefix = phoneNumber.substring(0, 3);
-      if (['077', '097'].includes(prefix)) {
-        networkLogo.src = 'assets/img/airtel.svg';
-        networkLogo.style.display = 'inline';
-      } else if (['076', '096'].includes(prefix)) {
-        networkLogo.src = 'assets/img/mtn.svg';
-        networkLogo.style.display = 'inline';
-      } else if (['075', '095'].includes(prefix)) {
-        networkLogo.src = 'assets/img/zamtel.png';
-        networkLogo.style.display = 'inline';
-      } else {
-        networkLogo.style.display = 'none';
-      }
-    } else {
-      networkLogo.style.display = 'none';
-    }
-  }
-
-  function validateEmail() {
-    const emailValue = email.value;
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const emailError = document.getElementById('emailError');
-    if (!emailPattern.test(emailValue)) {
-      emailError.textContent = 'Invalid email address format.';
-      return false;
-    } else {
-      emailError.textContent = '';
-      email.value = email.value.toLowerCase();
-      return true;
-    }
-  }
-
-  function validateNRC() {
-    const nrcValue = nrc.value;
-    const nrcPattern = /^\d{6}\/\d{2}\/\d{1}$/;
-    const nrcError = document.getElementById('nrcError');
-    if (!nrcPattern.test(nrcValue)) {
-      nrcError.textContent = 'NRC must follow the format: 123456/78/9';
-      return false;
-    } else {
-      nrcError.textContent = '';
-      return true;
-    }
-  }
-
-  function formatNRC() {
-    let nrcValue = nrc.value.replace(/\D/g, ''); // Remove non-digit characters
-
-    if (nrcValue.length > 6) nrcValue = nrcValue.slice(0, 6) + '/' + nrcValue.slice(6);
-    if (nrcValue.length > 9) nrcValue = nrcValue.slice(0, 9) + '/' + nrcValue.slice(9);
-
-    nrc.value = nrcValue;
-  }
-
-  nrc.addEventListener('input', formatNRC);
-
-  function validatePassword() {
-    const passwordValue = password.value;
-    const passwordError = document.getElementById('passwordError');
-    if (passwordValue !== confirmPassword.value) {
-      passwordError.textContent = 'Passwords do not match.';
-      return false;
-    } else {
-      passwordError.textContent = '';
-      return true;
-    }
-  }
-
-  document.getElementById('registerForm').addEventListener('input', () => {
-    validateEmail();
-    validateNRC();
-    validatePassword();
-    toggleRegisterButton();
-  });
-
-  phone.addEventListener('input', updateNetworkLogo);
-</script>
-
+<script src="assets/js/register.js"></script>
 </body>
 </html>
