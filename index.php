@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
 
     $response = [
         'status' => 'error',
-        'message' => 'Invalid credentials'
+        'message' => 'Invalid Login details, please try again'
     ];
 
     // Prepare the query to check credentials
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
 
             // Set student name and number (fall back values in case session is empty)
             $studentName = $_SESSION['name'] ?? 'Student';
-            $studentNumber = $_SESSION['student_number'] ?? 'Student';
+            $studentNumber = $_SESSION['student_number'] ?? 'SID';
 
             // Determine redirect based on role
             $response['status'] = 'success';
@@ -52,8 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
     exit();
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,7 +63,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+<style>
+  .message-container {
+    /* padding: 15px; */
+    margin-top: 15px;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+    /* background-color:  */
+}
 
+</style>
 <div class="top-right">
   <span class="theme-toggle" onclick="toggleTheme()">🌞</span>
   <a href="help">Help</a>
@@ -75,6 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
 <div class="login-container">
   <img id="logoImage" src="assets/img/landscape.svg" alt="NATEC Logo">
   <h2>Login to Proceed</h2>
+    <!-- Message container for success/error messages -->
+    <div id="messageContainer" class="message-container" style="display: none;">
+    <p id="messageText"></p>
+  </div>
   <form id="loginForm" onsubmit="return handleLogin(event)">
     <div class="form-group">
       <input type="text" id="username" name="username" placeholder="phone or email" required>
@@ -128,18 +140,33 @@ function handleLogin(event) {
     })
     .then(response => response.json())
     .then(data => {
+        // Handle the response based on the status
+        const messageContainer = document.getElementById('messageContainer');
+        const messageText = document.getElementById('messageText');
+        
         if (data.status === 'success') {
-            alert(data.message);
+            messageContainer.style.display = 'block';
+            messageText.textContent = data.message;
+            // messageContainer.style.backgroundColor = '#4CAF50';  // Green for success
+            messageContainer.style.color = '#4CAF50';
             setTimeout(() => {
                 window.location.href = data.redirect_url;
-            }, 3000); // Redirect after a 3-second delay
+            }, 500); // Redirect after 2 seconds
         } else {
-            alert(data.message); // Show error message
+            messageContainer.style.display = 'block';
+            messageText.textContent = data.message;
+            // messageContainer.style.backgroundColor = '#f44336';  // Red for error
+            messageContainer.style.color = '#f44336';
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred. Please try again.');
+        const messageContainer = document.getElementById('messageContainer');
+        const messageText = document.getElementById('messageText');
+        messageContainer.style.display = 'block';
+        messageText.textContent = 'An error occurred. Please try again.';
+        messageContainer.style.backgroundColor = '#f44336';  // Red for error
+        messageContainer.style.color = 'white';
     });
 
     return false; // Prevent traditional form submission

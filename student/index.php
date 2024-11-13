@@ -5,7 +5,7 @@ ini_set('display_errors', 1);
 
 // Retrieve session data
 $studentName = $_SESSION['name'] ?? 'Student';
-$studentNumber = $_SESSION['student_number'] ?? null;
+$studentNumber = $_SESSION['student_number'] ?? 'SID';
 
 
 // Start the session and check if the user is logged in as a student
@@ -17,7 +17,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
 
 // Retrieve student's name from the session
 $studentName = $_SESSION['name'] ?? 'Student';
-$studentNumber = $_SESSION['number'] ?? 'Student';
+$studentNumber = $_SESSION['student_number'] ?? 'Student';
 
 // Include database connection (adjust according to your actual db config file)
 include('../dbconn.php');  // Ensure this path is correct
@@ -45,7 +45,7 @@ $announcement = mysqli_fetch_assoc($result);
 
 <!-- Main Content -->
 <div class="main-content">
-    <h1>Quick Menu</h1>
+    <h1>Quick Links</h1>
     
     <!-- Display Latest Announcement -->
     <?php if ($announcement): ?>
