@@ -34,6 +34,8 @@ CREATE TABLE `announcements` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+INSERT INTO `announcements` (`title`, `content`, `sender_role`) 
+VALUES ('Welcome to the Student Portal', 'Welcome! We are excited to have you here. Please explore the portal for updates, announcements, and more. Stay tuned for future communications.', 'admin');
 -- Dumping data for table `announcements`
 --
 
