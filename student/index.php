@@ -17,6 +17,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
 
 // Retrieve student's name from the session
 $studentName = $_SESSION['name'] ?? 'Student';
+$studentNumber = $_SESSION['number'] ?? 'Student';
 
 // Include database connection (adjust according to your actual db config file)
 include('../dbconn.php');  // Ensure this path is correct
@@ -26,25 +27,25 @@ $query = "SELECT title, content, sender_role FROM announcements ORDER BY created
 $result = mysqli_query($mysqli, $query);  // Use $mysqli here instead of $conn
 $announcement = mysqli_fetch_assoc($result);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
-    <link rel="stylesheet" href="../assets/css/student_dash.css">
+    <link rel="stylesheet" href="css/student_dash.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
 </head>
 <body>
 
 <!-- Navbar -->
-<?php require "navbar.php";?>
+<?php require "navbar.php"; ?>
+<?php require "sidebar.php"; ?>
 
 <!-- Main Content -->
 <div class="main-content">
-    <h1>Student Dashboard</h1>
+    <h1>Quick Menu</h1>
     
     <!-- Display Latest Announcement -->
     <?php if ($announcement): ?>
@@ -83,8 +84,6 @@ $announcement = mysqli_fetch_assoc($result);
             <p>Pay your school fees and dues</p>
             <a href="payments.php" class="btn">Make Payment</a>
         </div>
-
-        <!-- Second Row of Cards -->
         <div class="overview-item downloads-card" data-aos="fade-up" data-aos-delay="800">
             <i class="fas fa-download"></i>
             <h3>Downloads</h3>
@@ -96,18 +95,6 @@ $announcement = mysqli_fetch_assoc($result);
             <h3>View Course</h3>
             <p>Explore the content and resources</p>
             <a href="view_course.php" class="btn">Explore Course</a>
-        </div>
-        <div class="overview-item message-card" data-aos="fade-up" data-aos-delay="1200">
-            <i class="fas fa-envelope"></i>
-            <h3>Messages</h3>
-            <p>Check your inbox</p>
-            <a href="messages.php" class="btn">View Messages</a>
-        </div>
-        <div class="overview-item support-card" data-aos="fade-up" data-aos-delay="1400">
-            <i class="fas fa-life-ring"></i>
-            <h3>Support</h3>
-            <p>Get help with your studies</p>
-            <a href="support.php" class="btn">Contact Support</a>
         </div>
     </div>
 </div>

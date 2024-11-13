@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
 
             // Set student name and number (fall back values in case session is empty)
             $studentName = $_SESSION['name'] ?? 'Student';
-            $studentNumber = $_SESSION['student_number'] ?? null;
+            $studentNumber = $_SESSION['student_number'] ?? 'Student';
 
             // Determine redirect based on role
             $response['status'] = 'success';
